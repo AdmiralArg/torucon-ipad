@@ -1,0 +1,270 @@
+/* Torucon iPad-loop. Alt er tegnet i et 2048x2732-koordinatsystem (iPad Pro 12.9 stående),
+   og skaleres til skjermen: .bleed fyller hele skjermen (kan beskjæres), .safe får alltid plass. */
+
+:root {
+  --purple: #3b1e66;
+  --cover: 1;
+  --contain: 1;
+  --shadow: 0 8px 32px rgba(107, 46, 158, .5);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #030206;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+#screens { position: fixed; inset: 0; }
+
+.screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s ease, visibility 0s linear 1.2s;
+}
+.screen.active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1.2s ease, visibility 0s;
+}
+.screen:not(.active):not(.leaving) * { animation-play-state: paused !important; }
+.screen.bubble { background: #d9c7f2; }
+.screen.cyber { background: #030206; }
+
+.layer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2048px;
+  height: 2732px;
+  transform: translate(-50%, -50%) scale(var(--s));
+}
+.bleed { --s: var(--cover); }
+.safe { --s: var(--contain); }
+.safe > * { position: absolute; }
+
+/* ---------- Bubble Pop ---------- */
+
+.bubble .bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: drift 40s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: scale(1.04) translate(-12px, 10px); }
+  to { transform: scale(1.12) translate(28px, -36px); }
+}
+
+.bubbles i {
+  position: absolute;
+  bottom: -320px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .45);
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .7), rgba(255, 255, 255, .12) 45%, rgba(255, 210, 245, .06) 70%, rgba(255, 255, 255, 0) 72%);
+  animation: rise var(--t) linear var(--delay) infinite;
+}
+@keyframes rise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  8% { opacity: 1; }
+  50% { transform: translate(var(--sway), -1700px); }
+  92% { opacity: 1; }
+  100% { transform: translate(0, -3400px); opacity: 0; }
+}
+
+.bubble p, .bubble h1 { font-weight: normal; }
+
+.logo { filter: drop-shadow(0 8px 32px rgba(107, 46, 158, .5)); }
+
+.float { animation: float 6s ease-in-out infinite alternate; }
+@keyframes float {
+  from { translate: 0 -10px; }
+  to { translate: 0 14px; }
+}
+
+.pulse { animation: pulse 4s ease-in-out infinite; }
+@keyframes pulse {
+  0%, 70%, 100% { scale: 1; }
+  80% { scale: 1.07; }
+  90% { scale: .98; }
+}
+
+/* entrance each time a screen comes into view */
+.screen.active .enter { animation: enter 1s cubic-bezier(.16, 1, .3, 1) var(--d, 0s) both; }
+.screen.active .enter.float { animation: enter 1s cubic-bezier(.16, 1, .3, 1) both, float 6s ease-in-out 1s infinite alternate; }
+@keyframes enter {
+  from { opacity: 0; transform: translateY(60px) scale(.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.glass {
+  background: rgba(255, 255, 255, .62);
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+  border-radius: 72px;
+  color: var(--purple);
+  text-align: center;
+}
+
+/* Om Torucon */
+.om-panel {
+  left: 140px;
+  top: 643px;
+  width: 1768px;
+  padding: 100px 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  font: 700 56px/1.32 Outfit, sans-serif;
+}
+.om-panel .ingress { font: 900 76px/1.18 Outfit, sans-serif; }
+.om-panel .strong { font-weight: 900; }
+
+.om-foot {
+  left: 0;
+  width: 2048px;
+  top: 2220px;
+  text-align: center;
+  color: #fff;
+  text-shadow: var(--shadow);
+}
+.om-foot .label { font: 900 60px/1.27 Outfit, sans-serif; }
+.om-foot .date { font: 132px/1.45 "Dela Gothic One", sans-serif; display: inline-block; }
+.om-foot .place { font: 700 56px/1.27 Outfit, sans-serif; }
+
+/* Programsøknad */
+.program-head {
+  left: 0;
+  width: 2048px;
+  top: 591px;
+  text-align: center;
+  color: #fff;
+  font: 150px/1.08 "Dela Gothic One", sans-serif;
+  text-shadow: var(--shadow);
+}
+.program-card {
+  left: 190px;
+  top: 853px;
+  width: 1668px;
+  padding: 90px 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  font: 700 58px/1.28 Outfit, sans-serif;
+}
+.qr-box {
+  background: #fff;
+  border-radius: 48px;
+  padding: 60px;
+}
+.qr-box img { display: block; width: 760px; height: 760px; image-rendering: pixelated; }
+.program-card .link { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.program-card .small { font: 700 48px/1.25 Outfit, sans-serif; }
+.program-card .url { font: 900 66px/1.25 Outfit, sans-serif; }
+
+/* Merch */
+.merch-head {
+  left: 0;
+  width: 2048px;
+  top: 482px;
+  text-align: center;
+  color: #fff;
+  font: 190px/1.45 "Dela Gothic One", sans-serif;
+  text-shadow: var(--shadow);
+}
+.bubble .name, .bubble .price, .tote-text .note { color: #fff; text-shadow: var(--shadow); }
+.tote { left: 174px; top: 767px; width: 747px; }
+.screen.active .product { animation: bob 5s ease-in-out infinite alternate; }
+.screen.active .tote.enter { animation: enter 1s cubic-bezier(.16, 1, .3, 1) var(--d) both, bob 5s ease-in-out 1.2s infinite alternate; }
+@keyframes bob {
+  from { translate: 0 -8px; rotate: -1.5deg; }
+  to { translate: 0 12px; rotate: 1.5deg; }
+}
+.tote-text { left: 991px; top: 920px; }
+.tote-text .name { font: 110px/1.08 "Dela Gothic One", sans-serif; }
+.tote-text .price { font: 260px/1.45 "Dela Gothic One", sans-serif; display: inline-block; transform-origin: left center; }
+.tote-text .note { font: 900 58px/1.25 Outfit, sans-serif; }
+
+.small-merch { left: 144px; top: 1817px; display: flex; gap: 40px; }
+.item { width: 560px; display: flex; flex-direction: column; align-items: center; }
+.item .pic { height: 400px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 20px; }
+.item:nth-child(2) .product { animation-delay: -1.7s; }
+.item:nth-child(3) .product { animation-delay: -3.3s; }
+.item .name { font: 92px/1.45 "Dela Gothic One", sans-serif; }
+.item .price { font: 140px/1.45 "Dela Gothic One", sans-serif; }
+
+/* ---------- Cyberdrive ---------- */
+
+.cy-grid { position: absolute; inset: 0; transform: translateY(calc(var(--ty) * 1px)); }
+.cy-grid i { position: absolute; left: 0; width: 2048px; height: 1px; background: #1c1b2b; opacity: .4; }
+.cy-dots i { position: absolute; width: 3.05px; height: 3.05px; border-radius: 50%; background: #00f0ff; opacity: .6; }
+
+.chev { width: 40.63px; }
+.cyber-logo { left: 244px; top: 880px; width: 1560px; }
+.glitch { animation: glitch 6s steps(1) infinite; }
+@keyframes glitch {
+  0%, 100% { transform: none; filter: none; }
+  91% { transform: translate(-6px, 2px); filter: drop-shadow(8px 0 0 rgba(255, 0, 122, .7)) drop-shadow(-8px 0 0 rgba(0, 240, 255, .7)); }
+  92% { transform: translate(5px, -3px); filter: drop-shadow(-6px 0 0 rgba(255, 0, 122, .7)) drop-shadow(6px 0 0 rgba(0, 240, 255, .7)); }
+  93% { transform: none; filter: none; }
+  96% { transform: translate(3px, 0); clip-path: inset(40% 0 35% 0); }
+  97% { transform: none; clip-path: none; }
+}
+
+.cyber-info { left: 0; width: 2048px; top: 1687px; text-align: center; }
+.cyber-info .tag { font: 600 44px/1.3 "Geist Mono", monospace; letter-spacing: .08em; color: #ff007a; }
+.cyber-info .date { font: 700 230px/1.27 Rajdhani, sans-serif; letter-spacing: .04em; color: #fff; }
+.cyber-info .place { font: 600 46px/1.3 "Geist Mono", monospace; letter-spacing: .06em; color: #00f0ff; }
+.blink { animation: blink 3s steps(1) infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 85% { opacity: .25; } 90% { opacity: 1; } 94% { opacity: .4; } }
+
+.panel { top: 2417.55px; width: 618px; }
+
+/* ---------- Meny ---------- */
+
+#menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: rgba(3, 2, 6, .82);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  font-family: Outfit, sans-serif;
+  color: #fff;
+  padding: 24px;
+}
+#menu[hidden] { display: none; }
+.menu-box { width: min(560px, 100%); text-align: center; }
+.menu-logo { width: 70%; margin-bottom: 28px; }
+.menu-lead { font-weight: 900; font-size: 28px; margin-bottom: 20px; }
+.menu-buttons { display: grid; gap: 12px; }
+.menu-buttons button {
+  font: 700 24px Outfit, sans-serif;
+  padding: 18px;
+  border-radius: 18px;
+  border: 2px solid rgba(255, 255, 255, .3);
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+}
+.menu-buttons button.primary { background: #ff007a; border-color: #ff007a; }
+.menu-buttons button.current { outline: 4px solid #00f0ff; outline-offset: 2px; }
+.menu-hint { margin-top: 22px; font-weight: 700; font-size: 17px; opacity: .7; }
+
+@media (prefers-reduced-motion: reduce) {
+  .screen * { animation: none !important; }
+}
