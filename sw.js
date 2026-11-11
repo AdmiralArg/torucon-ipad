@@ -1,6 +1,6 @@
 // Lagrer alt på iPaden ved første besøk, så loopen kjører uten nett.
 // Bump VERSION når noe endres, så iPadene henter ny versjon neste gang de er på nett.
-var VERSION = "torucon-ipad-v3";
+var VERSION = "torucon-ipad-v4";
 var FILES = [
   "./",
   "index.html",
@@ -37,7 +37,9 @@ var FILES = [
 ];
 
 self.addEventListener("install", function (e) {
-  e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));
+  // cache: "reload" så vi ikke lagrer gamle filer fra nettleserens vanlige cache
+  var fresh = FILES.map(function (f) { return new Request(f, { cache: "reload" }); });
+  e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(fresh); }).then(function () { return self.skipWaiting(); }));
 });
 
 self.addEventListener("activate", function (e) {

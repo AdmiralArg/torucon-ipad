@@ -148,10 +148,21 @@
     if (document.visibilityState === "visible") { keepAwake(); schedule(); }
   });
 
-  // ---- offline ----
+  // ---- offline og automatisk oppdatering ----
   if ("serviceWorker" in navigator) {
+    var hadController = !!navigator.serviceWorker.controller;
+    var reloading = false;
+    // ny versjon tatt i bruk: last siden på nytt (ikke ved aller første installasjon)
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (!hadController || reloading) return;
+      reloading = true;
+      location.reload();
+    });
     window.addEventListener("load", function () {
-      navigator.serviceWorker.register("sw.js").catch(function () {});
+      navigator.serviceWorker.register("sw.js").then(function (reg) {
+        // iPadene står på hele dagen, så se etter ny versjon hvert kvarter
+        setInterval(function () { reg.update().catch(function () {}); }, 15 * 60 * 1000);
+      }).catch(function () {});
     });
   }
 
