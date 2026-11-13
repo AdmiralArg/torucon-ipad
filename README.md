@@ -15,6 +15,18 @@ Laget som en nettside som oppfører seg som en app (PWA), så den kjører i full
 
 Hold fingeren på skjermen i 3 sekunder for å komme tilbake til menyen.
 
+## Videoer
+
+I menyen kan du trykke **+ Legg til videoer** og velge én eller flere videoer fra Bilder eller Filer på iPaden.
+Videoene lagres på den iPaden (ikke i repoet), og blir liggende til du trykker **Fjern**.
+
+- **Loop alle skjermene** spiller videoene etter de fire skjermene. Hver video spilles ferdig før neste skjerm.
+- **Loop bare videoene** spiller bare videoene, etter hverandre. Er det én video, looper den sømløst.
+- **Fyll hele skjermen** beskjærer videoen så den fyller skjermen. Uten den vises hele videoen med svarte kanter.
+
+Videoene spilles uten lyd, ellers stopper iPaden automatisk avspilling. Bruk MP4 (H.264 eller HEVC).
+Slå av **Strømsparingsmodus**: da stopper iPaden all automatisk videoavspilling. Står videoen stille, starter den igjen med et trykk.
+
 ## Endre innhold
 
 - Tekst står i `index.html`.

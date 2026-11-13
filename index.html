@@ -113,11 +113,19 @@
     <img src="assets/img/torucon-logo.svg" alt="Torucon" class="menu-logo">
     <p class="menu-lead">Hva skal denne iPaden vise?</p>
     <div class="menu-buttons">
-      <button data-mode="loop" class="primary">Loop alle skjermene</button>
+      <button data-mode="loop" class="primary">Loop alle skjermene<span class="count"></span></button>
+      <button data-mode="videos" hidden>Loop bare videoene</button>
       <button data-mode="om">Om Torucon</button>
       <button data-mode="program">Programsøknad</button>
       <button data-mode="merch">Merch</button>
       <button data-mode="cyber">Cyberdrive 2027</button>
+    </div>
+    <div class="menu-videos">
+      <p class="menu-sub">Videoer på denne iPaden</p>
+      <ul id="video-list" hidden></ul>
+      <label class="add-video">+ Legg til videoer<input type="file" id="video-input" accept="video/*" multiple></label>
+      <p id="video-status" class="video-status" aria-live="polite"></p>
+      <label class="fill-toggle"><input type="checkbox" id="video-fill"> Fyll hele skjermen (beskjær videoen)</label>
     </div>
     <p class="menu-hint">Hold fingeren på skjermen i 3 sekunder for å komme tilbake hit.</p>
   </div>

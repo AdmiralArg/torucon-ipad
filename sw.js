@@ -1,6 +1,6 @@
 // Lagrer alt på iPaden ved første besøk, så loopen kjører uten nett.
 // Bump VERSION når noe endres, så iPadene henter ny versjon neste gang de er på nett.
-var VERSION = "torucon-ipad-v4";
+var VERSION = "torucon-ipad-v5";
 var FILES = [
   "./",
   "index.html",
